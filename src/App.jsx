@@ -1,23 +1,79 @@
-import styles from './App.module.css'
-import {AppCard} from './AppCard'
+import { useState } from 'react';
+import styles from './App.module.css';
+import { AppCard } from './AppCard';
 
+const initialApps = [
+  { id: 1, title: 'Calculator', text: 'Simple calculator app', date: '27.04', price: 'Free', category: 'tools' },
+  { id: 2, title: 'Weather Pro', text: 'Accurate weather forecast', date: '28.04', price: '$2.99', category: 'weather' },
+  { id: 3, title: 'Note Taker', text: 'Quick notes and todos', date: '29.04', price: 'Free', category: 'productivity' },
+  { id: 4, title: 'Photo Editor', text: 'Edit photos like a pro', date: '30.04', price: '$4.99', category: 'photo' },
+  { id: 5, title: 'Map Navigator', text: 'GPS navigation system', date: '01.05', price: 'Free', category: 'tools' },
+  { id: 6, title: 'Weather Lite', text: 'Minimal weather app', date: '02.05', price: 'Free', category: 'weather' },
+  { id: 7, title: 'Task Manager', text: 'Manage your daily tasks', date: '03.05', price: '$1.99', category: 'productivity' },
+];
+
+const categories = [
+  { id: 'all', label: 'All' },
+  { id: 'tools', label: '🛠️ Tools' },
+  { id: 'weather', label: '🌤️ Weather' },
+  { id: 'productivity', label: '📝 Productivity' },
+  { id: 'photo', label: '📸 Photo' },
+];
 
 export default function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const filteredApps = initialApps.filter(app => {
+    const matchSearch = app.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCategory = selectedCategory === 'all' || app.category === selectedCategory;
+    return matchSearch && matchCategory;
+  });
+
   return (
     <>
-      <h1 className={styles.header}>MiniStore</h1>
-      <main>
-        {[
-          {title: 'Product1', text: 'Text1', date: '27.04'}, 
-          {title: 'Product2', text: 'Text2', date: '28.04'}, 
-          {title: 'Product3', text: 'Text3', date: '29.04'}
-        ].map(({title, text, date}) => (
-          <AppCard 
-            title={title}
-            text={text}
-            date={date}
-          />
+      <h1 className={styles.header}>🛍️ MiniStore</h1>
+      
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="🔍 Search apps..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className={styles.searchInput}
+        />
+      </div>
+
+      <div className={styles.filterContainer}>
+        {categories.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`${styles.filterButton} ${selectedCategory === cat.id ? styles.activeFilter : ''}`}
+          >
+            {cat.label}
+          </button>
         ))}
+      </div>
+
+      <main className={styles.main}>
+        {filteredApps.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>😢 Nothing found</p>
+            <span>Try changing your search or filter</span>
+          </div>
+        ) : (
+          filteredApps.map(app => (
+            <AppCard
+              key={app.id}
+              title={app.title}
+              text={app.text}
+              date={app.date}
+              price={app.price}
+              searchTerm={searchTerm}
+            />
+          ))
+        )}
       </main>
     </>
   );
