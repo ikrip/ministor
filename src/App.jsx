@@ -13,7 +13,6 @@ const initialApps = [
 ];
 
 const categories = [
-  { id: 'all', label: 'All' },
   { id: 'tools', label: '🛠️ Tools' },
   { id: 'weather', label: '🌤️ Weather' },
   { id: 'productivity', label: '📝 Productivity' },
@@ -23,11 +22,15 @@ const categories = [
 export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [priceMode, setPriceMode] = useState('all'); // 'all', 'free', 'paid'
 
   const filteredApps = initialApps.filter(app => {
     const matchSearch = app.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCategory = selectedCategory === 'all' || app.category === selectedCategory;
-    return matchSearch && matchCategory;
+    const matchPrice = priceMode === 'all' || 
+      (priceMode === 'free' && app.price === 'Free') ||
+      (priceMode === 'paid' && app.price !== 'Free');
+    return matchSearch && matchCategory && matchPrice;
   });
 
   return (
@@ -45,6 +48,32 @@ export default function App() {
       </div>
 
       <div className={styles.filterContainer}>
+        {/* Тумблер цен */}
+        <div className={styles.priceToggle}>
+          <button
+            onClick={() => setPriceMode('all')}
+            className={`${styles.toggleBtn} ${priceMode === 'all' ? styles.activeToggle : ''}`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setPriceMode('free')}
+            className={`${styles.toggleBtn} ${priceMode === 'free' ? styles.activeToggle : ''}`}
+          >
+            🎁 Free
+          </button>
+          <button
+            onClick={() => setPriceMode('paid')}
+            className={`${styles.toggleBtn} ${priceMode === 'paid' ? styles.activeToggle : ''}`}
+          >
+            💰 Paid
+          </button>
+        </div>
+
+        {/* Разделитель */}
+        <div className={styles.divider}></div>
+
+        {/* Кнопки категорий */}
         {categories.map(cat => (
           <button
             key={cat.id}

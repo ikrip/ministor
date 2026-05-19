@@ -35,18 +35,68 @@
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
 }
 
-/* Контейнер фильтров */
+/* Контейнер всех фильтров */
 .filterContainer {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
   margin: 30px 20px;
   flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 12px 20px;
+  border-radius: 60px;
+  backdrop-filter: blur(10px);
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
+/* Красивый тумблер цен */
+.priceToggle {
+  display: flex;
+  gap: 0;
+  background: #f0f0f0;
+  border-radius: 50px;
+  padding: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.toggleBtn {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: #888;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.toggleBtn:hover {
+  color: #667eea;
+}
+
+.activeToggle {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Разделитель */
+.divider {
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(to bottom, transparent, #ddd, transparent);
+}
+
+/* Кнопки категорий */
 .filterButton {
-  padding: 10px 24px;
-  font-size: 14px;
+  padding: 8px 20px;
+  font-size: 13px;
   font-weight: 600;
   border: none;
   background: #f0f0f0;
@@ -54,6 +104,7 @@
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .filterButton:hover {
@@ -96,4 +147,21 @@
 .emptyState span {
   font-size: 16px;
   color: #999;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .filterContainer {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  
+  .toggleBtn, .filterButton {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+  
+  .divider {
+    height: 25px;
+  }
 }
