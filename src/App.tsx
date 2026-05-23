@@ -2,7 +2,23 @@ import { useState } from 'react';
 import styles from './App.module.css';
 import { AppCard } from './AppCard';
 
-const initialApps = [
+interface AppItem {
+  id: number;
+  title: string;
+  text: string;
+  date: string;
+  price: string;
+  category: 'tools' | 'weather' | 'productivity' | 'photo';
+}
+
+interface Category {
+  id: AppItem['category'];
+  label: string;
+}
+
+type PriceMode = 'all' | 'free' | 'paid';
+
+const initialApps: AppItem[] = [
   { id: 1, title: 'Calculator', text: 'Simple calculator app', date: '27.04', price: 'Free', category: 'tools' },
   { id: 2, title: 'Weather Pro', text: 'Accurate weather forecast', date: '28.04', price: '$2.99', category: 'weather' },
   { id: 3, title: 'Note Taker', text: 'Quick notes and todos', date: '29.04', price: 'Free', category: 'productivity' },
@@ -12,7 +28,7 @@ const initialApps = [
   { id: 7, title: 'Task Manager', text: 'Manage your daily tasks', date: '03.05', price: '$1.99', category: 'productivity' },
 ];
 
-const categories = [
+const categories: Category[] = [
   { id: 'tools', label: '🛠️ Tools' },
   { id: 'weather', label: '🌤️ Weather' },
   { id: 'productivity', label: '📝 Productivity' },
@@ -20,9 +36,9 @@ const categories = [
 ];
 
 export default function App() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [priceMode, setPriceMode] = useState('all'); // 'all', 'free', 'paid'
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<AppItem['category'] | 'all'>('all');
+  const [priceMode, setPriceMode] = useState<PriceMode>('all');
 
   const filteredApps = initialApps.filter(app => {
     const matchSearch = app.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -42,7 +58,7 @@ export default function App() {
           type="text"
           placeholder="🔍 Search apps..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           className={styles.searchInput}
         />
       </div>
