@@ -1,0 +1,11 @@
+{
+  "apps": [
+    { "id": 1, "title": "Calculator", "text": "Simple calculator app", "date": "27.04", "price": "Free", "category": "tools", "image": "https://i.pinimg.com/736x/b5/bd/57/b5bd57770f6fa3b82912428dc4d9e905.jpg" },
+    { "id": 2, "title": "Weather Pro", "text": "Accurate weather forecast", "date": "28.04", "price": "$2.99", "category": "weather", "image": "https://i.pinimg.com/1200x/94/12/7b/94127b62056abccb8fdac644d6bc603b.jpg" },
+    { "id": 3, "title": "Note Taker", "text": "Quick notes and todos", "date": "29.04", "price": "Free", "category": "productivity", "image": "https://i.pinimg.com/736x/e2/68/2e/e2682e6b368d0d313a1d2ca3b0427175.jpg" },
+    { "id": 4, "title": "Photo Editor", "text": "Edit photos like a pro", "date": "30.04", "price": "$4.99", "category": "photo", "image": "https://i.pinimg.com/1200x/83/35/27/8335272ec504a87edf99322f83c1757a.jpg" },
+    { "id": 5, "title": "Map Navigator", "text": "GPS navigation system", "date": "01.05", "price": "Free", "category": "tools", "image": "https://i.pinimg.com/1200x/21/01/ff/2101ffe181ef0e18702de81b03f9dfe2.jpg" },
+    { "id": 6, "title": "Weather Lite", "text": "Minimal weather app", "date": "02.05", "price": "Free", "category": "weather", "image": "https://i.pinimg.com/1200x/3a/84/ea/3a84ea8d56a5ee0870eaabe3d5aa4046.jpg" },
+    { "id": 7, "title": "Task Manager", "text": "Manage your daily tasks", "date": "03.05", "price": "$1.99", "category": "productivity", "image": "https://i.pinimg.com/1200x/a1/3a/2a/a13a2a29d5936948e519ab8601a49bd2.jpg" }
+  ]
+}

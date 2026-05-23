@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import { AppCard } from './AppCard';
 
@@ -9,6 +9,7 @@ interface AppItem {
   date: string;
   price: string;
   category: 'tools' | 'weather' | 'productivity' | 'photo';
+  image: string; // Ссылка на картинку, которая приходит из API
 }
 
 interface Category {
@@ -17,16 +18,6 @@ interface Category {
 }
 
 type PriceMode = 'all' | 'free' | 'paid';
-
-const initialApps: AppItem[] = [
-  { id: 1, title: 'Calculator', text: 'Simple calculator app', date: '27.04', price: 'Free', category: 'tools' },
-  { id: 2, title: 'Weather Pro', text: 'Accurate weather forecast', date: '28.04', price: '$2.99', category: 'weather' },
-  { id: 3, title: 'Note Taker', text: 'Quick notes and todos', date: '29.04', price: 'Free', category: 'productivity' },
-  { id: 4, title: 'Photo Editor', text: 'Edit photos like a pro', date: '30.04', price: '$4.99', category: 'photo' },
-  { id: 5, title: 'Map Navigator', text: 'GPS navigation system', date: '01.05', price: 'Free', category: 'tools' },
-  { id: 6, title: 'Weather Lite', text: 'Minimal weather app', date: '02.05', price: 'Free', category: 'weather' },
-  { id: 7, title: 'Task Manager', text: 'Manage your daily tasks', date: '03.05', price: '$1.99', category: 'productivity' },
-];
 
 const categories: Category[] = [
   { id: 'tools', label: '🛠️ Tools' },
@@ -40,7 +31,37 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<AppItem['category'] | 'all'>('all');
   const [priceMode, setPriceMode] = useState<PriceMode>('all');
 
-  const filteredApps = initialApps.filter(app => {
+  // Состояние для хранения списка приложений с сервера API
+  const [apps, setApps] = useState<AppItem[]>([]);
+  // Состояние для экрана загрузки
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Асинхронная функция загрузки данных с локального сервера
+  const loadApps = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch('http://localhost:5000/apps'); 
+      
+      if (!res.ok) {
+        throw new Error('Ошибка при ответе локального сервера API');
+      }
+
+      const data = await res.json();
+      setApps(data); // Записываем полученные данные в стейт
+    } catch (e) {
+      console.error('Не удалось загрузить данные из API:', e);
+    } finally {
+      setIsLoading(false); // Выключаем индикатор загрузки
+    }
+  };
+
+  // Вызываем загрузку один раз при монтировании компонента
+  useEffect(() => {
+    loadApps();
+  }, []);
+
+  // Фильтрация данных, полученных с сервера
+  const filteredApps = apps.filter(app => {
     const matchSearch = app.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCategory = selectedCategory === 'all' || app.category === selectedCategory;
     const matchPrice = priceMode === 'all' || 
@@ -53,6 +74,7 @@ export default function App() {
     <>
       <h1 className={styles.header}>🛍️ MiniStore</h1>
       
+      {/* Поле поиска */}
       <div className={styles.searchContainer}>
         <input
           type="text"
@@ -63,6 +85,7 @@ export default function App() {
         />
       </div>
 
+      {/* Контейнер фильтров */}
       <div className={styles.filterContainer}>
         {/* Тумблер цен */}
         <div className={styles.priceToggle}>
@@ -86,14 +109,17 @@ export default function App() {
           </button>
         </div>
 
-        {/* Разделитель */}
+        {/* Вертикальный разделитель */}
         <div className={styles.divider}></div>
 
-        {/* Кнопки категорий */}
+        {/* Кнопки категорий с возможностью отмены выбора */}
         {categories.map(cat => (
           <button
             key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
+            onClick={() => {
+              // Если категория уже активна — клик сбрасывает её на 'all', иначе — выбирает её
+              setSelectedCategory(selectedCategory === cat.id ? 'all' : cat.id);
+            }}
             className={`${styles.filterButton} ${selectedCategory === cat.id ? styles.activeFilter : ''}`}
           >
             {cat.label}
@@ -101,8 +127,13 @@ export default function App() {
         ))}
       </div>
 
+      {/* Сетка вывода карточек */}
       <main className={styles.main}>
-        {filteredApps.length === 0 ? (
+        {isLoading ? (
+          <div className={styles.emptyState}>
+            <p>🔄 Loading apps from server...</p>
+          </div>
+        ) : filteredApps.length === 0 ? (
           <div className={styles.emptyState}>
             <p>😢 Nothing found</p>
             <span>Try changing your search or filter</span>
@@ -115,6 +146,7 @@ export default function App() {
               text={app.text}
               date={app.date}
               price={app.price}
+              image={app.image} // Передаем картинку из API в карточку
               searchTerm={searchTerm}
             />
           ))

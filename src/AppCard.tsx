@@ -1,22 +1,21 @@
 import * as React from 'react';
 import styles from './AppCard.module.css';
 
-// Интерфейс для пропсов компонента
 interface AppCardProps {
   title: string;
   text: string;
   date: string;
   price: string;
+  image: string; // Зарегистрировали картинку в пропсах карточки
   searchTerm: string;
 }
 
-// Функция для подсветки найденного текста с явным указанием типов
 function highlightText(text: string, searchTerm: string): React.ReactNode {
   if (!searchTerm || searchTerm.trim() === '') {
     return text;
   }
   
-  const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})`, 'gi');
   const parts = text.split(regex);
   
   return parts.map((part, index) => 
@@ -33,17 +32,22 @@ function highlightText(text: string, searchTerm: string): React.ReactNode {
   );
 }
 
-export function AppCard({ title, text, date, price, searchTerm }: AppCardProps) {
+export function AppCard({ title, text, date, price, image, searchTerm }: AppCardProps) {
   const isFree = price === 'Free';
   
   return (
     <section className={styles.card}>
+      {/* Блок для отображения иконки приложения */}
+      <div className={styles.imageContainer}>
+        <img src={image} alt={title} className={styles.appImage} />
+      </div>
+      
       <h2>{highlightText(title, searchTerm)}</h2>
       <p>{highlightText(text, searchTerm)}</p>
-      <div className={styles.cardFooter}>
+      <div className={styles.footer}>
         <span className={styles.date}>{date}</span>
-        <span className={styles.price} data-free={isFree}>
-          {price === 'Free' ? '🎁 ' + price : price}
+        <span className={`${styles.price} ${isFree ? styles.free : styles.paid}`}>
+          {price}
         </span>
       </div>
     </section>
