@@ -12,6 +12,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "i": "^0.3.7",
+    "mobx-react-lite": "^4.1.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
